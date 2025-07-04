@@ -1,36 +1,30 @@
-import requests, re, socket
-from urllib.parse import urlparse
-import subprocess
+from utils.url_analyzer import analyze_link
 
-def get_ip_domain(url):
+def analyze_and_format(url):
     try:
-        parsed = urlparse(url)
-        domain = parsed.netloc
-        ip = socket.gethostbyname(domain)
-        return domain, ip
-    except:
-        return None, None
+        result = analyze_link(url)
 
-def check_redirection(url):
-    try:
-        r = requests.get(url, timeout=3, allow_redirects=True)
-        hops = [resp.url for resp in r.history] + [r.url]
-        return hops
-    except:
-        return ["[Error] Redirection Failed"]
+        domain = result.get("Domain", "N/A")
+        ip = result.get("IP", "N/A")
+        redirs = result.get("Redirections", [])
+        fake = result.get("Fake", False)
 
-def is_fake_domain(domain):
-    with open("data/safe_domains.txt") as f:
-        safe = f.read().splitlines()
-    return domain not in safe
+        # Determine status
+        if domain == "N/A" or ip == "N/A":
+            status = "UNKNOWN"
+        elif fake:
+            status = "DANGER"
+        else:
+            status = "SAFE"
 
-def analyze_link(url):
-    domain, ip = get_ip_domain(url)
-    redirs = check_redirection(url)
-    fake = is_fake_domain(domain)
-    return {
-        "Domain": domain,
-        "IP": ip,
-        "Redirections": redirs,
-        "Fake": fake
-    }
+        return {
+            "Domain": domain,
+            "IP": ip,
+            "Redirections": redirs,
+            "Status": status
+        }
+
+    except Exception as e:
+        return {
+            "Error": str(e)
+        }
