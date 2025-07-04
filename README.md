@@ -1,12 +1,16 @@
-## 🔥 ShadowWall Tool - Fake Site Blocker & Analyzer
-- 🛡️ Auto monitors all links you click
-- 🚫 Blocks fake login sites
-- 🌐 Analyzes redirection, payloads, IP address
-- ✅ Alerts you with GUI before unsafe links open
+# 🛡️ ShadowWall - Real-Time Fake Login Blocker
 
-### 📦 To Install:
-1. Download the ZIP and extract
-2. Double click `installer.bat` to run in background
-3. Enjoy real-time protection 🛡️
+ShadowWall is a smart Python-based cyber security tool that:
 
-🔒 Developed by LNT 💛
+- 🛡️ Monitors every link you click or copy
+- 🔗 Detects fake login pages & redirections
+- 🔒 Blocks unsafe password submissions
+- 🌐 Traces route, IP & matches real/fake domains
+- 🖥️ Shows real-time GUI with colored results
+
+## 🔧 How to Install
+1. Clone or download the ZIP
+2. Run `installer.bat` to enable auto-start
+3. Use `main.py` to launch GUI scan anytime
+
+🧠 Developed with 💛 by **LNT**
