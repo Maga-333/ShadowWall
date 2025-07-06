@@ -140,4 +140,6 @@ dangerzone-netflix-link.net
 misleading-facebook-entry.com
 fakeaccess-cloud-alert.org
 phishyzone-loginalert.com
-
+17ebook.com
+paypal-verification.co
+faceb00k-security.net
