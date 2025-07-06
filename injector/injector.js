@@ -1,7 +1,10 @@
-const forms = document.querySelectorAll("form");
-forms.forEach(form => {
-  form.addEventListener("submit", function(e) {
-    e.preventDefault();
-    alert("🚨 ShadowWall blocked this suspicious login form!");
-  });
-});
+from selenium import webdriver
+
+driver = webdriver.Chrome()
+driver.get("http://fake-login-site.com")
+
+# Inject blocking JS
+driver.execute_script("""
+  document.querySelectorAll('input[type="password"]').forEach(el => el.disabled = true);
+  alert("🚨 Blocked: Fake Login Page Detected!");
+""")
