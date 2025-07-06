@@ -77,4 +77,3 @@ def analyze_link(url):
         "Final Org": org,
         "Fake": fake
     }
-
