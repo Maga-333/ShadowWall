@@ -50,4 +50,3 @@ def start_gui():
     tk.Button(app, text="Scan URL", command=scan).pack()
 
     app.mainloop()
-
