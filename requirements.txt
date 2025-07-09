@@ -1,0 +1,4 @@
+requests
+colorama
+ipwhois
+beautifulsoup4
