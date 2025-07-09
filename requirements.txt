@@ -3,3 +3,5 @@ colorama
 ipwhois
 beautifulsoup4
 selenium
+webdriver_manager
+pyperclip
