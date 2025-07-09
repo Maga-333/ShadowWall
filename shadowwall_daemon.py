@@ -1,10 +1,9 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 
-from realtime_monitor import analyze_link  # <-- Make sure analyze_link uses VirusTotal + danger list
+from realtime_monitor import analyze_link
 import pyperclip, time, json
 from colorama import Fore, init
 import os
@@ -14,8 +13,20 @@ init(autoreset=True)
 
 scanned_reports = []
 driver = None
+tab_opened = False  # ✅ Track if tab already opened
 
-# 📂 Check Domain in Safe/Danger Lists
+
+# ✅ Auto-create safe/danger files if missing
+def ensure_domain_files():
+    os.makedirs("data", exist_ok=True)
+    for fname in ["safe_domains.txt", "danger_domains.txt"]:
+        path = os.path.join("data", fname)
+        if not os.path.exists(path):
+            with open(path, "w") as f:
+                f.write("")  # empty file
+
+
+# 🔍 Check if domain is safe or dangerous
 def check_domain_status(domain):
     domain = domain.lower()
     try:
@@ -32,7 +43,8 @@ def check_domain_status(domain):
 
     return "unknown"
 
-# 🧒 Update HTML Report Page
+
+# 🧠 Create/update HTML dashboard
 def update_html_dashboard():
     with open("shadowwall_alert.html", "w") as f:
         f.write("""
@@ -48,13 +60,13 @@ def update_html_dashboard():
                     alert("🛘 ShadowWall blocked password submission on this fake site!");
                   });
                 });
+                window.scrollTo(0, document.body.scrollHeight);
               };
             </script>
         </head>
-        <body style=\"background:black; color:white; font-family:sans-serif; padding:20px;\">
-            <h1 style=\"color:yellow; text-align:center;\">🛡️ ShadowWall Live Report</h1>
+        <body style="background:black; color:white; font-family:sans-serif; padding:20px;">
+            <h1 style="color:yellow; text-align:center;">🛡️ ShadowWall Live Report</h1>
         """)
-
         for report in scanned_reports:
             result = json.dumps({k: v for k, v in report['data'].items() if k != "VirusTotal"}, indent=2)
             border_color = "red" if report["data"].get("Fake") else "green"
@@ -65,10 +77,10 @@ def update_html_dashboard():
                     <pre style='background:#222; color:orange; padding:10px; border-radius:8px;'>{result}</pre>
                 </div>
             """)
-
         f.write("</body></html>")
 
-# 🌐 Launch Browser Without Loading Any Site
+
+# 🌐 Launch Chrome (only when needed)
 def launch_browser_blank():
     global driver
     options = Options()
@@ -77,12 +89,26 @@ def launch_browser_blank():
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=options)
 
-# 🦪 Refresh Dashboard
-def open_dashboard():
-    dashboard_path = "file://" + os.path.abspath("shadowwall_alert.html")
-    driver.get(dashboard_path)
 
-# 🔀 Detect All Sources
+# 🔁 Open or refresh same tab only when needed
+def open_dashboard():
+    global tab_opened
+    dashboard_path = "file://" + os.path.abspath("shadowwall_alert.html")
+
+    try:
+        if not tab_opened:
+            driver.get(dashboard_path)
+            tab_opened = True
+        elif driver.current_url.startswith("file://") and "shadowwall_alert.html" in driver.current_url:
+            driver.execute_script("location.reload(true);")
+        else:
+            driver.get(dashboard_path)
+    except:
+        driver.get(dashboard_path)
+        tab_opened = True
+
+
+# 🕵️ Real-time monitor (clipboard + browser)
 def monitor_all_sources():
     print(Fore.CYAN + "\n🛡️ ShadowWall Real-Time Monitor Started...\n")
     clipboard_history = set()
@@ -97,7 +123,6 @@ def monitor_all_sources():
                     print(Fore.YELLOW + f"\n🗌 Copied Link: {current_clip}")
                     result = analyze_link(current_clip)
 
-                    # 🌐 Domain check logic
                     domain = urlparse(current_clip).netloc.lower()
                     status = check_domain_status(domain)
                     if status == "danger":
@@ -105,9 +130,12 @@ def monitor_all_sources():
                     elif status == "safe":
                         result["Fake"] = False
 
-                    show_report(result, current_clip)
-                    last_clip = current_clip
-                    clipboard_history.add(current_clip)
+                    if result:
+                        if not driver:
+                            launch_browser_blank()
+                        show_report(result, current_clip)
+                        last_clip = current_clip
+                        clipboard_history.add(current_clip)
             except Exception as e:
                 print(Fore.RED + f"Clipboard error: {e}")
 
@@ -122,7 +150,6 @@ def monitor_all_sources():
                         print(Fore.YELLOW + f"\n🌐 Browser URL Visited: {browser_url}")
                         result = analyze_link(browser_url)
 
-                        # 🌐 Domain check logic
                         domain = urlparse(browser_url).netloc.lower()
                         status = check_domain_status(domain)
                         if status == "danger":
@@ -130,8 +157,9 @@ def monitor_all_sources():
                         elif status == "safe":
                             result["Fake"] = False
 
-                        show_report(result, browser_url)
-                        browser_history.add(browser_url)
+                        if result:
+                            show_report(result, browser_url)
+                            browser_history.add(browser_url)
             except Exception as e:
                 print(Fore.RED + f"Browser read error: {e}")
 
@@ -142,7 +170,8 @@ def monitor_all_sources():
         if driver:
             driver.quit()
 
-# 🤔 Report Display
+
+# 📢 Show live report
 def show_report(result, url):
     scanned_reports.append({"url": url, "data": result})
     update_html_dashboard()
@@ -153,14 +182,14 @@ def show_report(result, url):
     else:
         print(Fore.GREEN + "✅ SAFE SITE")
 
-    # Print final output except VirusTotal
-    filtered_result = {k: v for k, v in result.items() if k != "VirusTotal"}
-    print(Fore.GREEN + json.dumps(filtered_result, indent=2))
+    filtered = {k: v for k, v in result.items() if k != "VirusTotal"}
+    print(Fore.GREEN + json.dumps(filtered, indent=2))
 
-# 🚀 Entry Point
+
+# 🚀 Entry
 def main():
-    launch_browser_blank()
-    monitor_all_sources()
+    ensure_domain_files()
+    monitor_all_sources()  # browser only launches on demand
 
 if __name__ == "__main__":
     main()
