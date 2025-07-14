@@ -195,6 +195,107 @@ forgot.html
 2fa.html
 authcode.html
 smsverify.php
-
-# 1000+ entries total
-# This list includes login forms, phishing patterns, payload filenames, malicious URLs, script injections and credential-related triggers.
+<script>
+<iframe
+onerror=
+onload=
+onmouseover=
+onclick=
+document.cookie
+eval(
+alert(
+prompt(
+confirm(
+src="
+data:text/html
+javascript:
+window.location
+fetch(
+new XMLHttpRequest
+XMLHttpRequest
+<form
+<svg
+xlink:href
+base64,
+sqlmap
+union select
+drop table
+insert into
+select *
+xp_cmdshell
+../
+/etc/passwd
+/bin/bash
+id=
+passwd=
+user=
+admin
+root
+login.php
+config.php
+.env
+.htaccess
+.htpasswd
+eval(
+exec(
+system(
+curl
+wget
+nmap
+python
+shell_exec
+chmod
+chown
+cmd=
+powershell
+whoami
+netstat
+tcpdump
+phpinfo
+base64_decode
+bypass
+csrf
+xss
+rce
+sqli
+injection
+backdoor
+payload
+exploit
+metasploit
+msfconsole
+reverse shell
+keylogger
+hook.js
+zscaler
+canarytoken
+token grabber
+discord token
+stealer
+ngrok
+localtunnel
+remote code
+code execution
+dnslog
+exfiltration
+download.php
+upload.php
+file_put_contents
+fopen
+fwrite
+curl_exec
+malware
+spyware
+trojan
+virus
+hacked by
+hacking
+phishing
+spoofed
+0day
+vulnerability
+anonymous
+cyberarmy
+bugbounty
+deface
+defacement
