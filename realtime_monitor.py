@@ -34,7 +34,7 @@ def get_ip_domain(url):
     except:
         return "Unknown", "Unknown"
 
-# ✅ Redirection + WHOIS (Optional - not for blocking)
+# ✅ Redirection + WHOIS
 def check_redirection(url):
     try:
         headers = {"User-Agent": "Mozilla/5.0"}
@@ -68,67 +68,84 @@ def has_payload_keyword(url, payload_keywords):
 
 # 🚧 Placeholder for VirusTotal (Simulated Clean)
 def virustotal_check(url):
-    # Replace with VT API call if needed
     return False
 
-# 🔍 Main Analyzer
+# ✅ Main Analyzer Function
 def analyze_link(url):
     safe_list, danger_list, payload_keywords = load_domain_lists()
 
+    reasons = []
+    redirection_error = False
+    virus_check = virustotal_check(url)
+    ip_flagged = False  # Placeholder; can be extended later
+
     domain, ip = get_ip_domain(url)
     redirs, final_url, final_domain, final_ip, country, org = check_redirection(url)
-    keyword = has_payload_keyword(url, payload_keywords)
-    virus_check = virustotal_check(url)
+
+    if redirs == [("[Error] Redirection Failed", "N/A")]:
+        redirection_error = True
+        redirs = [[url, 0]]
+        final_url = url
+        final_domain = domain
+        final_ip = ip
+        country = "Unknown"
+        org = "Unknown"
+        reasons.append("Redirection failed")
 
     domain = domain.lower() if domain else "unknown"
     final_domain = final_domain.lower() if final_domain else "unknown"
 
-    # ✅ Domain Presence Checks
+    keyword = has_payload_keyword(url, payload_keywords)
+    if keyword:
+        reasons.append(f"Payload keyword: {keyword}")
+
     in_danger = domain in danger_list or final_domain in danger_list
+    if in_danger:
+        reasons.append("Domain listed in danger_domains.txt")
+
     in_safe = domain in safe_list or final_domain in safe_list
+    if in_safe:
+        reasons.clear()  # No need to mark as fake if safe
 
-    # ✅ Behavior-Based Suspicion
-    suspicious_keyword = keyword is not None
     multiple_redirections = len(redirs) > 1
+    if multiple_redirections:
+        reasons.append("Multiple redirections")
 
-    # 🔐 Final Decision Logic
     is_fake = (
-        in_danger or
-        virus_check or
-        suspicious_keyword or
-        multiple_redirections
+        not in_safe and (
+            in_danger or
+            keyword is not None or
+            virus_check or
+            multiple_redirections or
+            redirection_error
+        )
     )
 
-    # 🟢 Force SAFE if explicitly listed
-    if in_safe:
-        is_fake = False
+    formatted_redirs = [[u, code] for u, code in redirs]
 
-    # 🧾 Report Output
-    print(f"\n🌐 Scanning URL: {url}\n")
-    print("🔁 Redirection Chain:")
-    for i, (u, code) in enumerate(redirs):
-        print(f"  {i+1}. {u}  [{code}]")
-
-    print("\n🧠 Final Analysis:")
-    print(f"🔹 Original Domain : {domain}")
-    print(f"🔹 Original IP     : {ip}")
-    print(f"🔹 Final Domain    : {final_domain}")
-    print(f"🔹 Final IP        : {final_ip}")
-    print(f"🌍 Country         : {country}")
-    print(f"💣 Payload Keyword : {keyword if keyword else 'None'}")
-    print(f"🦠 VirusTotal      : {'Malicious' if virus_check else 'Clean'}")
-    print(f"🚨 Fake            : {'true' if is_fake else 'false'}")
-
-    return {
+    result = {
         "url": url,
         "Domain": domain,
         "IP": ip,
-        "Redirections": redirs,
+        "Redirections": formatted_redirs,
         "Final URL": final_url,
         "Final Domain": final_domain,
         "Final IP": final_ip,
         "Final Country": country,
         "Payload Keyword": keyword,
-        "VirusTotal": virus_check,
-        "Fake": is_fake
+        "IP Flagged": ip_flagged,
+        "Redirection Error": redirection_error,
+        "Fake": is_fake,
+        "Reasons": reasons
     }
+
+    # 🖨 Pretty print
+    print("\n📄 Detailed Report:")
+    for k, v in result.items():
+        print(f"{k:>18}: {v}")
+
+    return result
+
+# 🧪 Test (example)
+if __name__ == "__main__":
+    analyze_link("https://americannews.com/")
