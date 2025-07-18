@@ -115,4 +115,5 @@ gitlab.com/groups
 stackoverflow.com/questions
 npmjs.com/package
 mozilla.org/en-US
+web.whatsapp.com
 ...
