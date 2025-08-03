@@ -35,4 +35,4 @@ python3 shadowwall_daemon.py
 deactivate
 
 
-Developed 💛 by **LNT**
+👨‍💻 Developed 💛 by **LNT**
