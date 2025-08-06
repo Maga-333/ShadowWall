@@ -31,7 +31,6 @@ office365
 drive
 upload
 s3bucket
-github
 gitlab
 bitbucket
 git-login
