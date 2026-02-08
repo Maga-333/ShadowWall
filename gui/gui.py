@@ -44,7 +44,7 @@ class ShadowWallGUI:
             pass
         
         # Sidebar Buttons
-        self.scan_button = ctk.CTkButton(self.sidebar, text="🔍 Scan URL 😄", command=self.start_scan, fg_color="green", hover_color="lightgreen", corner_radius=25, font=self.cute_font)
+        self.scan_button = ctk.CTkButton(self.sidebar, text="Scan URL", command=self.start_scan, fg_color="green", hover_color="lightgreen", corner_radius=25, font=self.cute_font)
         self.scan_button.pack(pady=15)
         
         self.clear_button = ctk.CTkButton(self.sidebar, text="Clear Results", command=self.clear_results, fg_color="orange", corner_radius=25, font=self.cute_font)
