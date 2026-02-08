@@ -47,16 +47,16 @@ class ShadowWallGUI:
         self.scan_button = ctk.CTkButton(self.sidebar, text="🔍 Scan URL 😄", command=self.start_scan, fg_color="green", hover_color="lightgreen", corner_radius=25, font=self.cute_font)
         self.scan_button.pack(pady=15)
         
-        self.clear_button = ctk.CTkButton(self.sidebar, text="🧹 Clear Results", command=self.clear_results, fg_color="orange", corner_radius=25, font=self.cute_font)
+        self.clear_button = ctk.CTkButton(self.sidebar, text="Clear Results", command=self.clear_results, fg_color="orange", corner_radius=25, font=self.cute_font)
         self.clear_button.pack(pady=15)
         
-        self.export_button = ctk.CTkButton(self.sidebar, text="💾 Export Results", command=self.export_results, fg_color="blue", corner_radius=25, font=self.cute_font)
+        self.export_button = ctk.CTkButton(self.sidebar, text="Export Results", command=self.export_results, fg_color="blue", corner_radius=25, font=self.cute_font)
         self.export_button.pack(pady=15)
         
-        self.customize_button = ctk.CTkButton(self.sidebar, text="🎨 Customize Colors", command=self.customize_colors, fg_color="purple", corner_radius=25, font=self.cute_font)
+        self.customize_button = ctk.CTkButton(self.sidebar, text="Customize Colors", command=self.customize_colors, fg_color="purple", corner_radius=25, font=self.cute_font)
         self.customize_button.pack(pady=15)
         
-        self.exit_button = ctk.CTkButton(self.sidebar, text="👋 Exit 😘", command=root.quit, fg_color="red", hover_color="pink", corner_radius=25, font=self.cute_font)
+        self.exit_button = ctk.CTkButton(self.sidebar, text="Exit", command=root.quit, fg_color="red", hover_color="pink", corner_radius=25, font=self.cute_font)
         self.exit_button.pack(pady=15)
         
         # Main Frame
@@ -84,7 +84,7 @@ class ShadowWallGUI:
         self.progress.pack(pady=15)
         self.progress.set(0)
         
-        self.status_label = ctk.CTkLabel(self.main_frame, text="Ready to analyze! 🐶", font=self.cute_font)
+        self.status_label = ctk.CTkLabel(self.main_frame, text="Ready to analyze!", font=self.cute_font)
         self.status_label.pack(pady=10)
         
         # Spinner
@@ -105,7 +105,7 @@ class ShadowWallGUI:
     
     def update_progress(self, value):
         self.progress.set(value / 100)
-        self.status_label.configure(text=f"Analyzing... {int(value)}% complete! 🎉")
+        self.status_label.configure(text=f"Analyzing... {int(value)}% complete!")
         if value >= 100:
             self.spinner.pack_forget()
             self.is_scanning = False
@@ -131,7 +131,7 @@ class ShadowWallGUI:
                 self.colors[key] = vars[key].get()
             self.update_tag_colors()
             dialog.destroy()
-            messagebox.showinfo("Applied", "Colors updated! 🎨")
+            messagebox.showinfo("Applied", "Colors updated!")
         
         ttk.Button(dialog, text="Apply", command=apply).grid(row=row, column=0, columnspan=2, pady=10)
     
@@ -195,7 +195,7 @@ class ShadowWallGUI:
     def clear_results(self):
         self.results_text.delete(1.0, tk.END)
         self.progress.set(0)
-        self.status_label.configure(text="Results cleared! 🧹")
+        self.status_label.configure(text="Results cleared!")
     
     def export_results(self):
         content = self.results_text.get(1.0, tk.END).strip()
@@ -206,7 +206,7 @@ class ShadowWallGUI:
         if file_path:
             with open(file_path, "w") as f:
                 f.write(content)
-            messagebox.showinfo("Exported", "Results exported! 📄")
+            messagebox.showinfo("Exported", "Results exported!")
 
 # ================= START GUI FUNCTION ================= #
 def start_gui():
