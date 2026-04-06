@@ -8,7 +8,7 @@ from realtime_monitor import analyze_link  # Adjust path if needed
 ctk.set_appearance_mode("dark")  # Overall dark mode
 ctk.set_default_color_theme("blue")
 
-# ================= CUTE & PROFESSIONAL GUI ================= #
+
 class ShadowWallGUI:
     def __init__(self, root):
         self.root = root
@@ -64,7 +64,7 @@ class ShadowWallGUI:
         self.main_frame.pack(side="right", fill="both", expand=True, padx=15, pady=15)
         
         # URL Entry (Clear Font)
-        self.entry_label = ctk.CTkLabel(self.main_frame, text="Enter URL to Analyze: 🌐", font=self.cute_font)
+        self.entry_label = ctk.CTkLabel(self.main_frame, text="Enter URL to Analyze: 🌐")
         self.entry_label.pack(pady=10)
         self.entry = ctk.CTkEntry(self.main_frame, width=700, placeholder_text="Enter a valid URL here (e.g., https://example.com)", font=("Arial", 14, "bold"))
         self.entry.pack(pady=10)
@@ -84,7 +84,7 @@ class ShadowWallGUI:
         self.progress.pack(pady=15)
         self.progress.set(0)
         
-        self.status_label = ctk.CTkLabel(self.main_frame, text="Ready to analyze!", font=self.cute_font)
+        self.status_label = ctk.CTkLabel(self.main_frame, text="Ready to analyze!")
         self.status_label.pack(pady=10)
         
         # Spinner
