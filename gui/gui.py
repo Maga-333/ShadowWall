@@ -44,19 +44,19 @@ class ShadowWallGUI:
             pass
         
         # Sidebar Buttons
-        self.scan_button = ctk.CTkButton(self.sidebar, text="Scan URL", command=self.start_scan, fg_color="green", hover_color="lightgreen", corner_radius=25, font=self.cute_font)
+        self.scan_button = ctk.CTkButton(self.sidebar, text="🔍 Scan URL 😄", command=self.start_scan, fg_color="green", hover_color="lightgreen", corner_radius=25)
         self.scan_button.pack(pady=15)
         
-        self.clear_button = ctk.CTkButton(self.sidebar, text="Clear Results", command=self.clear_results, fg_color="orange", corner_radius=25, font=self.cute_font)
+        self.clear_button = ctk.CTkButton(self.sidebar, text="Clear Results", command=self.clear_results, fg_color="orange", corner_radius=25)
         self.clear_button.pack(pady=15)
         
-        self.export_button = ctk.CTkButton(self.sidebar, text="Export Results", command=self.export_results, fg_color="blue", corner_radius=25, font=self.cute_font)
+        self.export_button = ctk.CTkButton(self.sidebar, text="Export Results", command=self.export_results, fg_color="blue", corner_radius=25)
         self.export_button.pack(pady=15)
         
-        self.customize_button = ctk.CTkButton(self.sidebar, text="Customize Colors", command=self.customize_colors, fg_color="purple", corner_radius=25, font=self.cute_font)
+        self.customize_button = ctk.CTkButton(self.sidebar, text="Customize Colors", command=self.customize_colors, fg_color="purple", corner_radius=25)
         self.customize_button.pack(pady=15)
         
-        self.exit_button = ctk.CTkButton(self.sidebar, text="Exit", command=root.quit, fg_color="red", hover_color="pink", corner_radius=25, font=self.cute_font)
+        self.exit_button = ctk.CTkButton(self.sidebar, text="Exit", command=root.quit, fg_color="red", hover_color="pink", corner_radius=25)
         self.exit_button.pack(pady=15)
         
         # Main Frame
