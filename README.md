@@ -30,7 +30,7 @@ python main.py
 # 7. To run ShadowWall in background mode (daemon)
 python3 shadowwall_daemon.py
 
-# 8. To stop ShadowWall (both GUI / daemon[Background])
+# 8. To stop ShadowWall (daemon[Background])
 Press Ctrl + C in the terminal
 
 # 9. To deactivate the virtual environment
